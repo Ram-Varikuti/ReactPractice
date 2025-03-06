@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 
 const Todos = () => {
 
     const [todos, setTodos] = useState([]);
     const [newTodo, setNewTodo] = useState('');
-
+    const [filter, setFilter] = useState('all');
 
     const addTodo = () => {
         if (newTodo.trim()) {
@@ -24,11 +24,24 @@ const Todos = () => {
         setTodos(todos.filter((todo) => todo.id !== id));
     }
 
+    const getTodos = todos.filter((todo) => {
+        if (filter === 'all') {
+            return true;
+        } else if (filter === 'completed') {
+            return todo.completed;
+        } else {
+            return !todo.completed;
+        }
+    });
+
     return (
         <div>
             <h1>Todos</h1>
             <input type="text" value={newTodo} onChange={(e) => setNewTodo(e.target.value)} placeholder="enter new Todo"></input>
             <button onClick={addTodo}>ADD</button>
+            <button onClick={getTodos()}>ALL</button>
+            <button onClick={getTodos()}>Completed</button>
+            <button onClick={getTodos()}>InCompleted</button>
             <ol>
                 {todos.map((todo, index) => (
                     <li key={index} style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}><input type="checkbox" checked={todo.completed} onChange={() => toggleCompletion(todo.id)} />{todo.text}<button onClick={() => removeTodo(todo.id)}>DELETE</button></li>
